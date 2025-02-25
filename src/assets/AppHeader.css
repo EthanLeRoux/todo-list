@@ -1,0 +1,13 @@
+.App-header{
+    background-color: #262626;
+    display: flex;
+    text-align: center;
+}
+
+.App-header__logo{
+    float: left;
+}
+
+.App-header__links{
+
+}
