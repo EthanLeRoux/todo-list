@@ -1,0 +1,36 @@
+.App-header{
+    display: flex;
+    text-align: center;
+}
+
+.App-header__logo{
+    float: left;
+}
+
+.task_area{
+    padding: 10px;
+    background-color: #434343;
+    border-radius: 10px;
+}
+
+.task_item{
+    list-style: none;
+    padding: 10px;
+    border-width: 5px;
+    border-color: #323232;
+}
+
+.task_item:hover{
+    background-color: #2c2c2c;
+    border-radius: 10px;
+}
+
+.task_button{
+    background-color: #2b2b2b;
+    border: none;
+}
+
+.task_button:hover{
+    border: none;
+    color: white;
+}

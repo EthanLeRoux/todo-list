@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {addTask, removeTask, updateTask} from "../redux/taskSlice.js";
 import {fetchTasks} from "../firebase/firebasetasks.js";
+import '/src/assets/Tasks.css';
 
 export default function Tasks() {
     const tasks = useSelector((state)=>state.tasker.tasks);
@@ -48,13 +49,13 @@ export default function Tasks() {
             <input type={"text"} onChange={handleTaskChange} value={taskToAdd.name}/>
             <button onClick={handleAddTask}>Add task</button>
 
-            <ul>
+            <ul className={"task_area"}>
                 {
                     tasks.map((task, index) => (
-                        <li key={index}>
+                        <li key={index} className={"task_item"}>
                             {task.name}
                             <input type={'checkbox'} checked={task.completed} onChange={()=>{handleTaskCompleted(index, task)}}/>
-                            <button onClick={()=>{handleRemoveTask(index)}} className={'App-button'}>Delete task</button>
+                            <button onClick={()=>{handleRemoveTask(index)}} className={'task_button'} >Delete task</button>
                         </li>
                     ))
                 }
