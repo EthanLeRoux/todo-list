@@ -9,16 +9,6 @@ export default function AppHeader(){
                 </a>
                 <br/>
                 <div className="App-header__links">
-                    <a href="/">
-                        <h2>
-                            Login
-                        </h2>
-                    </a>
-                    <a href="/">
-                        <h2>
-                            Settings
-                        </h2>
-                    </a>
                 </div>
 
             </header>
