@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {loginUser} from "../firebase/auth.js";
 import {useNavigate} from "react-router-dom";
+import '/src/assets/Tasks.css';
 
 export default function Login(){
     const navigate = useNavigate();
@@ -31,14 +32,14 @@ export default function Login(){
 
     return(
         <>
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleFormSubmit} className={'formArea'}>
                 <p>
-                    <input type={"email"} onChange={handleEmailChange} value={userEmail} placeholder="Email" required={true}/>
+                    <input type={"email"} onChange={handleEmailChange} value={userEmail} placeholder="Email" required={true} className={'inputText'}/>
                 </p>
                 <p>
-                    <input type={"password"} onChange={handlePasswordChange} value={userPassword} placeholder="Password" required={true}/>
+                    <input type={"password"} onChange={handlePasswordChange} value={userPassword} placeholder="Password" required={true} className={'inputText'}/>
                 </p>
-                <input type={'submit'} value={"Login"}/>
+                <input type={'submit'} value={"Login"} className={"task_addbutton"}/>
             </form>
         </>
     )

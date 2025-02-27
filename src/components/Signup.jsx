@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {createNewUser} from "../firebase/auth.js";
+import '/src/assets/Tasks.css';
 
 export default function Signup(){
     const[userEmail, setUserEmail] = useState("");
@@ -26,14 +27,14 @@ export default function Signup(){
 
     return(
         <>
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleFormSubmit} className={'formArea'}>
                 <p>
-                    <input type={"email"} onChange={handleEmailChange} value={userEmail} placeholder="Email" required={true}/>
+                    <input type={"email"} onChange={handleEmailChange} value={userEmail} placeholder="Email" required={true} className={'inputText'}/>
                 </p>
                 <p>
-                    <input type={"password"} onChange={handlePasswordChange} value={userPassword} placeholder="Password" required={true}/>
+                    <input type={"password"} onChange={handlePasswordChange} value={userPassword} placeholder="Password" required={true} className={'inputText'}/>
                 </p>
-                <input type={'submit'} value={"Sign Up"}/>
+                <input type={'submit'} value={"Sign Up"} className={"task_addbutton"}/>
             </form>
 
         </>

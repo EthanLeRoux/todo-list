@@ -59,3 +59,13 @@
     display: flex;
     gap: 30px;
 }
+
+.inputText{
+    height: 30px;
+}
+
+.formArea{
+    padding: 10px;
+    background-color: #323232;
+    border-radius: 10px;
+}
