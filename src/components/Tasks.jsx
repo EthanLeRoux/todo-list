@@ -1,10 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {addTask, removeTask, updateTask} from "../redux/taskSlice.js";
-import {fetchTasks} from "../firebase/firebasetasks.js";
 import '/src/assets/Tasks.css';
 import {db} from '../firebase/firebase.js';
 import {collection, addDoc, deleteDoc,updateDoc, doc} from 'firebase/firestore';
+import {auth} from '../firebase/auth.js';
 
 export default function Tasks() {
     const tasks = useSelector((state)=>state.tasker.tasks);
@@ -12,7 +12,7 @@ export default function Tasks() {
     const[taskToAdd, setTaskToAdd] = useState({});
     const taskCollection = collection(db,"tasks");
 
-    //local react
+    //local react state for task changes
     const handleTaskChange = (event)=>{
         const objTask = {
             name: event.target.value,
@@ -21,46 +21,55 @@ export default function Tasks() {
         setTaskToAdd(objTask);
     }
 
-    //Redux Actions
-    const handleAddTask = async ()=>{
+    //add task from redux store and firebase collection
+
+    const handleAddTaskByUser = async ()=>{
         let taskToAddToFirebase = {};
-        if(taskToAdd.name ===""){
-            alert("Task description cannot be left empty. Please enter a task.")
-        }
-        else{
-            taskToAddToFirebase = taskToAdd;
-
-            setTaskToAdd({
-                name: '',
-                complete: false
-            })
-
-            try{
-                const newTaskReference = await addDoc(taskCollection,taskToAddToFirebase);
-                dispatch(addTask(taskToAdd));
-                console.log("new task added to firebase" + newTaskReference.id)
+            if (taskToAdd.name === "") {
+                alert("Task description cannot be left empty. Please enter a task.")
             }
-            catch(error){
-                console.error(error);
-            }
-        }
+                const user = auth.currentUser;
+                if(user ) {
+                    taskToAddToFirebase = {
+                        userid: user.uid,
+                        name: taskToAdd.name,
+                        complete: taskToAdd.complete,
+                    };
+
+                    setTaskToAdd({
+                        name: '',
+                        complete: false
+                    })
+
+                    try {
+                        const newTaskReference = await addDoc(taskCollection, taskToAddToFirebase);
+                        dispatch(addTask(taskToAdd));
+                        console.log("new task added to firebase" + newTaskReference.id)
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }else{
+                    alert("You are not logged in. Please login to start creating notes.")
+                }
     }
 
+    //remove task from redux store and firebase collection
     const handleRemoveTask = async (taskIndex)=>{
         await deleteTaskFromFirebase(taskIndex);
         dispatch(removeTask(taskIndex));
     }
 
-    const deleteTaskFromFirebase = async (taskID)=>{
-        const taskToBeDeleted = doc(db,"tasks", taskID);
-        await deleteDoc(taskToBeDeleted);
-        console.log("Deleted " + taskToBeDeleted.id );
-    };
-
     const handleUpdateTask = async (taskIndex, task)=>{
         await updateTaskToFirebase(taskIndex, task);
         dispatch(
             updateTask(task));
+    };
+
+    //Firebase CRUD functions
+    const deleteTaskFromFirebase = async (taskID)=>{
+        const taskToBeDeleted = doc(db,"tasks", taskID);
+        await deleteDoc(taskToBeDeleted);
+        console.log("Deleted " + taskToBeDeleted.id );
     };
 
     const updateTaskToFirebase = async (taskID, updatedTask)=>{
@@ -74,14 +83,15 @@ export default function Tasks() {
     return (
         <>
             <div className="task_adding_section">
-                <input type={"text"} onChange={handleTaskChange} />
-                <button onClick={handleAddTask} className={"task_addbutton"}>Add task</button>
+                <input type={"text"} onChange={handleTaskChange} value={taskToAdd.name}/>
+                <button onClick={handleAddTaskByUser} className={"task_addbutton"}>Add task</button>
             </div>
 
 
             <ul className={"task_area"}>
 
-                {(tasks === undefined || tasks.length === 0)?<div>No tasks found.<br/> Add one by typing in the box above.</div> : tasks.map((task,index) => (
+                {
+                    (tasks === undefined || tasks.length === 0)?<div>No tasks found.<br/> Add one by typing in the box above.</div> : tasks.map((task,index) => (
                     <li key={task.id || index} className={"task_item"} id={task.id}>
                         {task.name}
                         <input type={'checkbox'}

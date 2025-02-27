@@ -14,6 +14,14 @@
     border-radius: 10px;
 }
 
+.App-header__links{
+    display: flex;
+    padding: 10px;
+}
+
+.linkItem{
+    padding: 10px;
+}
 .task_item{
     display: flex;
     gap: 10px;

@@ -1,9 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {fetchTasks} from "../firebase/firebasetasks.js";
+import {fetchTasks, fetchTasksByUser} from "../firebase/firebasetasks.js";
 
 const taskSlice = createSlice({
     name: 'task',
-    initialState: {tasks: await fetchTasks() || []},
+    initialState: {tasks: await fetchTasksByUser() || []},
     reducers: {
         addTask: (state, action) => {
             state.tasks.push(action.payload);
