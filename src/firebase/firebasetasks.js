@@ -61,6 +61,7 @@ const fetchTasksByUser = async ()=>{
             id: task.id,
             name:task.data().name,
             complete: task.data().complete,
+            dueDate: task.data().dueDate,
         }));
     }
     catch(error) {

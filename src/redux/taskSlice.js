@@ -12,12 +12,13 @@ const taskSlice = createSlice({
             state.tasks.splice(index,1);
         },
         updateTask: (state, action) => {
-            const{name, complete} = action.payload;
-            const taskIndex = state.tasks.findIndex(task => task.name === name);
+            const{id,name,complete,dueDate} = action.payload;
+            const taskIndex = state.tasks.findIndex(task => task.id === id);
             if(taskIndex > -1){
                 state.tasks[taskIndex] = {
                     name: name,
-                    complete: complete
+                    complete: complete,
+                    dueDate: dueDate,
                 }
             }
             else{
