@@ -21,18 +21,6 @@ export default function Tasks() {
         setTaskToAdd(objTask);
     }
 
-    const handleTaskCompleted = async (event, taskIndex, task)=>{
-        const checkboxParentElement = event.target.closest();
-        const taskToUpdatedId = checkboxParentElement.id;
-
-        if(task.complete ===  true){
-            await handleUpdateTask(taskToUpdatedId,task);
-        }else{
-            console.log("")
-        }
-
-    }
-
     //Redux Actions
     const handleAddTask = async ()=>{
         let taskToAddToFirebase = {};
@@ -71,15 +59,16 @@ export default function Tasks() {
 
     const handleUpdateTask = async (taskIndex, task)=>{
         await updateTaskToFirebase(taskIndex, task);
-        dispatch(updateTask({
-            name: task.name,
-            complete: !task.complete
-    }));
+        dispatch(
+            updateTask(task));
     };
 
     const updateTaskToFirebase = async (taskID, updatedTask)=>{
-        const taskToUpdated = doc(db,"tasks", taskID);
-        await updateDoc(taskToUpdated,updatedTask,{merge:true});
+        const taskToBeUpdated = doc(db,"tasks", taskID);
+        await updateDoc(taskToBeUpdated,{
+            complete: updatedTask.complete,
+        });
+        console.log("Updated task: " + taskToBeUpdated.id);
     }
 
     return (
@@ -91,27 +80,27 @@ export default function Tasks() {
 
 
             <ul className={"task_area"}>
-                {
-                    tasks.map((task) => (
-                        <li key={task.id} className={"task_item"} id={task.id}>
-                            {task.name}
 
-                            <input type={'checkbox'}
-                                   value={task.complete}
-                                   checked={task.complete}
-                                   onChange={async ()=>{
-                                       await handleUpdateTask(task.id, {
-                                           name: task.name,
-                                           complete: !task.complete
-                                       });
-                                   }}
-                            />
+                {(tasks === undefined || tasks.length === 0)?<div>No tasks found.<br/> Add one by typing in the box above.</div> : tasks.map((task,index) => (
+                    <li key={task.id || index} className={"task_item"} id={task.id}>
+                        {task.name}
+                        <input type={'checkbox'}
+                               checked={
+                                   task.complete
+                               }
+                               onChange={async ()=>{
+                                   await handleUpdateTask(task.id, {
+                                       name: task.name,
+                                       complete: !(task.complete)
+                                   });
+                               }}
+                        />
 
-                            <button onClick={()=>{handleRemoveTask(task.id)}} className={'task_button'}>
-                                <img src={"src/assets/delete-icon.svg"} width={"25px"} height={"25px"} />
-                            </button>
-                        </li>
-                    ))
+                        <button onClick={()=>{handleRemoveTask(task.id)}} className={'task_button'}>
+                            <img src={"src/assets/delete-icon.svg"} width={"25px"} height={"25px"} />
+                        </button>
+                    </li>
+                ))
                 }
             </ul>
 

@@ -23,12 +23,12 @@ const fetchTasks = async () => {
         console.log("Getting task documents...");
 
         if(querySnapshot ==null || querySnapshot.length == 0){
-            console.log("No tasks found");
+            console.log("No tasks found in firebase firestore");
         }
         return querySnapshot.map((task)=>({
             id: task.id,
             name:task.data().name,
-            completed: task.data().complete,
+            complete: task.data().complete,
         }));
     }
     catch(error) {
