@@ -11,8 +11,13 @@ const taskSlice = createSlice({
         removeTask: (state,index) => {
             state.tasks.splice(index,1);
         },
-        updateTask: (state, index, action) => {
-            state.tasks.at(index).push(action.payload);
+        updateTask: (state, action) => {
+            const{name, complete} = action.payload;
+            const taskIndex = state.tasks.findIndex(task => task.name === name);
+            state.tasks[taskIndex] = {
+                name: name,
+                complete: complete
+            }
         }
     }
 });

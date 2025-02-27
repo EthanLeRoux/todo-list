@@ -4,7 +4,7 @@ import {addTask, removeTask, updateTask} from "../redux/taskSlice.js";
 import {fetchTasks} from "../firebase/firebasetasks.js";
 import '/src/assets/Tasks.css';
 import {db} from '../firebase/firebase.js';
-import {collection, addDoc, deleteDoc, doc} from 'firebase/firestore';
+import {collection, addDoc, deleteDoc,updateDoc, doc} from 'firebase/firestore';
 
 export default function Tasks() {
     const tasks = useSelector((state)=>state.tasker.tasks);
@@ -21,21 +21,26 @@ export default function Tasks() {
         setTaskToAdd(objTask);
     }
 
-    const handleTaskCompleted = (taskIndex, task)=>{
-        setTaskToAdd({
-            complete: task.complete
-        });
+    const handleTaskCompleted = async (event, taskIndex, task)=>{
+        const checkboxParentElement = event.target.closest();
+        const taskToUpdatedId = checkboxParentElement.id;
+
+        if(task.complete ===  true){
+            await handleUpdateTask(taskToUpdatedId,task);
+        }else{
+            console.log("")
+        }
+
     }
 
     //Redux Actions
-    const handleAddTask = ()=>{
+    const handleAddTask = async ()=>{
         let taskToAddToFirebase = {};
         if(taskToAdd.name ===""){
             alert("Task description cannot be left empty. Please enter a task.")
         }
         else{
             taskToAddToFirebase = taskToAdd;
-            dispatch(addTask(taskToAdd));
 
             setTaskToAdd({
                 name: '',
@@ -43,7 +48,8 @@ export default function Tasks() {
             })
 
             try{
-                const newTaskReference = addDoc(taskCollection,taskToAddToFirebase);
+                const newTaskReference = await addDoc(taskCollection,taskToAddToFirebase);
+                dispatch(addTask(taskToAdd));
                 console.log("new task added to firebase" + newTaskReference.id)
             }
             catch(error){
@@ -52,20 +58,29 @@ export default function Tasks() {
         }
     }
 
-    const handleRemoveTask = (taskIndex)=>{
-        deleteTaskFromFirebase(taskIndex);
+    const handleRemoveTask = async (taskIndex)=>{
+        await deleteTaskFromFirebase(taskIndex);
         dispatch(removeTask(taskIndex));
     }
 
-    const deleteTaskFromFirebase = (taskID)=>{
+    const deleteTaskFromFirebase = async (taskID)=>{
         const taskToBeDeleted = doc(db,"tasks", taskID);
+        await deleteDoc(taskToBeDeleted);
         console.log("Deleted " + taskToBeDeleted.id );
     };
 
-    const handleUpdateTask = (taskIndex, task)=>{
-        handleTaskCompleted(taskIndex);
-        dispatch(updateTask(taskIndex, task));
+    const handleUpdateTask = async (taskIndex, task)=>{
+        await updateTaskToFirebase(taskIndex, task);
+        dispatch(updateTask({
+            name: task.name,
+            complete: !task.complete
+    }));
     };
+
+    const updateTaskToFirebase = async (taskID, updatedTask)=>{
+        const taskToUpdated = doc(db,"tasks", taskID);
+        await updateDoc(taskToUpdated,updatedTask,{merge:true});
+    }
 
     return (
         <>
@@ -77,10 +92,21 @@ export default function Tasks() {
 
             <ul className={"task_area"}>
                 {
-                    tasks.map((task, index) => (
-                        <li key={task.id} className={"task_item"}>
+                    tasks.map((task) => (
+                        <li key={task.id} className={"task_item"} id={task.id}>
                             {task.name}
-                            <input type={'checkbox'} value={task.completed} checked={task.completed} onChange={()=>{handleTaskCompleted(index, task)}}/>
+
+                            <input type={'checkbox'}
+                                   value={task.complete}
+                                   checked={task.complete}
+                                   onChange={async ()=>{
+                                       await handleUpdateTask(task.id, {
+                                           name: task.name,
+                                           complete: !task.complete
+                                       });
+                                   }}
+                            />
+
                             <button onClick={()=>{handleRemoveTask(task.id)}} className={'task_button'}>
                                 <img src={"src/assets/delete-icon.svg"} width={"25px"} height={"25px"} />
                             </button>
