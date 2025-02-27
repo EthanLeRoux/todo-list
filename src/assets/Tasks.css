@@ -1,6 +1,7 @@
 .App-header{
-    display: flex;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 15px;
     text-align: center;
 }
 
@@ -9,7 +10,10 @@
 }
 
 .App-header__links{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 15px;
+    text-align: center;
     padding: 10px;
 }
 
@@ -70,12 +74,16 @@
 }
 
 .task_adding_section{
-    display: flex;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 15px;
     justify-content: center;
     align-items: center;
 }
 
+.task_adding_section h4{
+    color: #767dff;
+}
 .inputText{
     height: 30px;
 }

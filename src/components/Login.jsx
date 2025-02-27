@@ -20,7 +20,6 @@ export default function Login(){
         if(userPassword.length<6){
             alert("Password must be at least 6 characters");
         }
-        alert("User and pass is: " + userEmail + " " + userPassword);
         await loginUser(userEmail, userPassword);
         sessionStorage.setItem("userEmail", userEmail);
         sessionStorage.setItem("userPassword", userPassword);

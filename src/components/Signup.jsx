@@ -1,10 +1,12 @@
 import {useState} from "react";
 import {createNewUser} from "../firebase/auth.js";
 import '/src/assets/Tasks.css';
+import {useNavigate} from "react-router-dom";
 
 export default function Signup(){
     const[userEmail, setUserEmail] = useState("");
     const[userPassword, setUserPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleEmailChange = (e) => {
         setUserEmail(e.target.value);
@@ -18,10 +20,11 @@ export default function Signup(){
         if(userPassword.length<6){
             alert("Password must be at least 6 characters");
         }
-        alert("User and pass is: " + userEmail + " " + userPassword);
         await createNewUser(userEmail, userPassword);
+        navigate("/login");
         setUserEmail("");
         setUserPassword("");
+
     };
 
 

@@ -93,6 +93,9 @@ export default function Tasks() {
     return (
         <>
             <div className="task_adding_section">
+                <h4>Task title</h4>
+                <h4>Task Due Date</h4>
+                <h4>{}</h4>
                 <input type={"text"} onChange={handleTaskChange} value={taskToAdd.name} className={"inputText"}/>
                 <DatePicker selected={startDate} onChange={(date) => setStartDate(date)}  showMonthYearDropdown className={"inputText"}/>
                 <button onClick={handleAddTaskByUser} className={"task_addbutton"}>Add task</button>
