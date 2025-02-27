@@ -8,12 +8,6 @@
     float: left;
 }
 
-.task_area{
-    padding: 10px;
-    background-color: #434343;
-    border-radius: 10px;
-}
-
 .App-header__links{
     display: flex;
     padding: 10px;
@@ -22,13 +16,31 @@
 .linkItem{
     padding: 10px;
 }
+
+.task_area{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 15px;
+        grid-row-gap: 0px;
+    padding: 10px;
+    background-color: #434343;
+    border-radius: 10px;
+}
+
 .task_item{
-    display: flex;
-    gap: 10px;
+    /*display: flex;*/
+    /*gap: 20px;*/
+    grid-column-start: 1;
+    grid-column-end: 4;
     list-style: none;
     padding: 10px;
     border-width: 5px;
     border-color: #323232;
+    text-align: center;
+    display: flex;
+    gap: 30px;
+    flex-direction: row;
+    align-items: center;
 }
 
 .task_item:hover{
@@ -53,11 +65,15 @@
     border: none;
     color: #646cff;
     font-size: 20px;
+    grid-column-start: 3;
+    grid-column-end: 4;
 }
 
 .task_adding_section{
     display: flex;
     gap: 30px;
+    justify-content: center;
+    align-items: center;
 }
 
 .inputText{
@@ -68,4 +84,16 @@
     padding: 10px;
     background-color: #323232;
     border-radius: 10px;
+}
+
+.task_checkbox{
+    width: 20px;
+    height: 20px;
+    border: 2px solid #646cff;
+    border-radius: 5px;
+}
+
+.tasks_none{
+    grid-column-start: 2;
+    grid-column-end: 3;
 }
